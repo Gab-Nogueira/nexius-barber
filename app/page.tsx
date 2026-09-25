@@ -13,6 +13,8 @@ import { formatMoney } from '@/lib/nexius';
 import { publicContent } from '@/lib/content';
 import { PhotoGallery } from '@/components/photo-gallery';
 import { BrandMotion } from '@/components/brand-motion';
+import { AvailabilityPulse, PortalControls } from '@/components/portal-controls';
+import { BeforeAfter, DemoTestimonials, ManagementShowcase } from '@/components/visual-showcase';
 import './gallery.css';
 
 export const dynamic = 'force-dynamic';
@@ -40,7 +42,7 @@ export default async function Home() {
   };
 
   return (
-    <main>
+    <main className="public-portal" data-theme="dark">
       <BrandMotion />
       <script
         type="application/ld+json"
@@ -73,8 +75,10 @@ export default async function Home() {
           <a href="#sobre">Sobre</a>
           <a href="#servicos">Serviços</a>
           <a href="#equipe">Equipe</a>
+          <a href="#sistema">Sistema</a>
           <a href="#contato">Contato</a>
         </nav>
+        <PortalControls whatsappNumber={values.whatsapp_number} />
         <a className="header-cta" href="/agendar">
           Agendar <ArrowUpRight aria-hidden="true" size={18} />
         </a>
@@ -105,6 +109,7 @@ export default async function Home() {
               Conhecer a Nexius <ArrowDown aria-hidden="true" size={18} />
             </a>
           </div>
+          <AvailabilityPulse serviceId={observedServices[0]?.id} serviceName={observedServices[0]?.name} />
         </div>
         <div className="hero-art" aria-label="Identidade visual Nexius Barber">
           {content.hero && (
@@ -199,12 +204,13 @@ export default async function Home() {
           Abrir catálogo da demonstração <ArrowUpRight aria-hidden="true" />
         </a>
       </section>
-      <PhotoGallery images={content.gallery} title="Trabalhos Nexius" />
+      <BeforeAfter />
+      <PhotoGallery images={content.gallery.length ? content.gallery : [{ id: 'demo-cut-detail', src: '/demo-cut-detail.webp', altText: 'Corte masculino ilustrativo gerado para demonstração', demo: true }]} title={content.gallery.length ? 'Trabalhos Nexius' : 'Referência de estilo · demonstração'} />
       <PhotoGallery images={content.environment} title="Conheça o ambiente" />
 
       <section className="public-team" id="equipe">
         <header>
-          <p className="section-index">04 / EQUIPE OBSERVADA</p>
+          <p className="section-index">05 / EQUIPE OBSERVADA</p>
           <h2>
             Escolha quem vai cuidar do seu <em>momento.</em>
           </h2>
@@ -229,7 +235,9 @@ export default async function Home() {
               <div>
                 <p>PROFISSIONAL</p>
                 <h3>{professional.name}</h3>
-                <span>Conheça os serviços disponíveis no agendamento.</span>
+                <span>{professional.serviceIds.map((id) => catalog.services.find((service) => service.id === id)?.name).filter(Boolean).slice(0, 2).join(' · ') || 'Conheça os serviços disponíveis no agendamento.'}</span>
+                <small className="team-profile-note">Bio e Instagram individual aguardam confirmação do profissional.</small>
+                <a className="team-social-link" href={values.instagram_url} target="_blank" rel="noopener noreferrer">Ver o Instagram da Nexius <ArrowUpRight aria-hidden="true" /></a>
                 <a href={`/agendar?profissional=${professional.id}`}>
                   Agendar com {professional.name} <ArrowUpRight />
                 </a>
@@ -238,10 +246,12 @@ export default async function Home() {
           ))}
         </div>
       </section>
+      <DemoTestimonials />
+      <ManagementShowcase contactUrl={`https://wa.me/5512991387556?text=${encodeURIComponent('Olá, Gabriel! Quero conversar sobre a apresentação do sistema Nexius Barber.')}`} />
 
       <section className="contact-section" id="contato">
         <div className="contact-callout">
-          <p className="section-index">05 / CONTATO</p>
+          <p className="section-index">08 / CONTATO</p>
           <h2>
             Seu próximo horário começa <em>aqui.</em>
           </h2>

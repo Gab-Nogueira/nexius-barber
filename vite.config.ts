@@ -58,6 +58,9 @@ export default defineConfig(async () => {
       ],
       exclude: [
         'lucide-react',
+        'motion',
+        'motion/react',
+        'framer-motion',
         '@base-ui/react',
         '@base-ui/react/alert-dialog',
         '@base-ui/react/button',

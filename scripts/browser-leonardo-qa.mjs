@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 
 const endpoint = process.env.CDP_ENDPOINT || 'http://127.0.0.1:9226';
-const origin = process.env.QA_ORIGIN || 'http://127.0.0.1:3000';
+const origin = process.env.QA_ORIGIN || 'http://[::1]:3000';
 const target = await (
   await fetch(`${endpoint}/json/new?about:blank`, { method: 'PUT' })
 ).json();
@@ -53,7 +53,8 @@ async function wait(expression, timeout = 20000) {
     if (await evaluate(expression)) return;
     await new Promise((resolve) => setTimeout(resolve, 200));
   }
-  throw new Error(`Timeout: ${expression}`);
+  const context = await evaluate('({url:location.href,title:document.title,text:document.body?.innerText?.slice(0,300)})');
+  throw new Error(`Timeout: ${expression}; page=${JSON.stringify(context)}; errors=${JSON.stringify(errors)}`);
 }
 
 async function setViewport(width, height) {

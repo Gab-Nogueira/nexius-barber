@@ -12,9 +12,18 @@ Para criar seu usuário e senha **locais**, abra `CONFIGURAR-ACESSO.cmd`. Não h
 
 No Windows, abra `INICIAR-NEXIUS.cmd`. Ele verifica o Node.js, instala as dependências se necessário, aplica as migrações pendentes e inicia `http://localhost:3000`.
 
-Para apresentar pela internet, use a demonstração publicada em `https://nexius-barber-demo.gabsilvanogueira.chatgpt.site`. Ela permanece identificada como **DEMONSTRAÇÃO**, não é a agenda oficial e não deve receber reservas reais antes da validação dos dados e da transição operacional.
+O endereço de demonstração deste projeto é `https://nexius-barber-demo.gabsilvanogueira.chatgpt.site`. A versão online permanece identificada como **DEMONSTRAÇÃO**, não é a agenda oficial e não deve receber reservas reais antes da validação dos dados e da transição operacional. Confira se a última publicação foi concluída antes de apresentar mudanças recentes.
 
 ## O que está implementado
+
+### Apresentação visual da demonstração
+
+- Portal mobile-first com contraste preto/branco/roxo, textura discreta, malha em X, spotlight, reveal e microinterações; o botão **Ver como funciona** conduz um tour para apresentar o sistema ao dono.
+- Indicador de horários de hoje consulta a API existente para o primeiro serviço observado. É indicativo, nunca uma promessa de vaga: a disponibilidade é revalidada na confirmação.
+- Comparador antes/depois, galeria e textos de experiência identificados como **demonstração**. As duas imagens geradas por IA não representam clientes, equipe nem trabalhos reais; veja [proveniência dos materiais](docs/MATERIAIS-DEMO.md).
+- Prévia ilustrativa do painel, comparação da rotina manual com a agenda online e contato comercial de apresentação pelo WhatsApp informado pelo desenvolvedor. Esse contato não substitui o WhatsApp oficial da Nexius.
+- Tema claro/escuro opcional no portal público (preferência local e preferência do sistema), ícone da Nexius, manifesto instalável e aviso offline. A agenda exige conexão; o PWA não cria reservas offline.
+- Animações e transições respeitam `prefers-reduced-motion`; em telas táteis a rolagem continua nativa.
 
 - Portal público responsivo, com identidade preta, branca e roxa, navegação, serviços observados, equipe, contato e localização.
 - Agendamento em cinco etapas: serviços, profissional, data/horário, identificação/revisão e confirmação persistida.
@@ -176,6 +185,10 @@ Os testes cobrem, entre outros pontos:
 - carga sintética com 40 serviços sem publicação no catálogo.
 
 O teste automatizado não substitui a validação dos dados reais da barbearia nem a conciliação com a agenda antiga.
+
+### Revisão visual local em 25/09/2026
+
+Após as mudanças visuais, passaram 54/54 testes de integração, 9/9 testes unitários, TypeScript, lint e build. A navegação automatizada no Chrome local conferiu o portal em 360, 390, 768, 1024 e 1440 px sem rolagem horizontal; tema, tour, comparador, galeria, manifesto PWA, service worker e movimento reduzido também passaram. A entrada direta pelo Leonardo continuou em `serviços → data/horário`, sem repetir a escolha do profissional, em 360, 390, 768 e 1024 px. Esses resultados são locais; não verificam a versão pública nem substituem revisão manual em aparelhos reais.
 
 ### Resultado verificado em 22/09/2026
 

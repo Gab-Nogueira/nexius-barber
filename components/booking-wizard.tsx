@@ -2,6 +2,7 @@
 import '@/app/booking-enhancements.css';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -174,6 +175,7 @@ export function BookingWizard({
   const fullDateTime = (iso: string) => formatDateTime(iso, booking?.timezone || settings.timezone);
   const [catalogReady, setCatalogReady] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     void fetch('/api/session', { method: 'POST' }).then(r => { if (r.ok) setSignedIn(true); }).catch(() => undefined);
@@ -390,6 +392,9 @@ export function BookingWizard({
     : Math.min(step, 5);
   const displayedStepTotal = entryProfessionalSelected ? 4 : 5;
   const displayedProgress = (displayedStep / displayedStepTotal) * 100;
+  const stepLabels = entryProfessionalSelected
+    ? ['Serviço', 'Horário', 'Dados', 'Pronto']
+    : ['Serviço', 'Profissional', 'Horário', 'Dados', 'Pronto'];
   const visibleServices = services.filter((service) => {
     const categoryMatches =
       category === 'all' || service.categoryName === category;
@@ -562,11 +567,15 @@ export function BookingWizard({
           <span>Etapa {displayedStep} de {displayedStepTotal}</span>
           <span>{Math.round(displayedProgress)}%</span>
         </div>
-        <Progress
-          value={displayedProgress}
-          className="booking-progress"
-          aria-label={`Etapa ${displayedStep} de ${displayedStepTotal}`}
-        />
+        <div className="booking-progress-shell">
+          <Progress
+            value={displayedProgress}
+            className="booking-progress"
+            aria-label={`Etapa ${displayedStep} de ${displayedStepTotal}`}
+          />
+          <motion.span className="booking-progress-marker" aria-hidden="true" initial={false} animate={{ left: `${displayedProgress}%` }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 240, damping: 27 }} />
+          <div className="booking-step-labels" aria-hidden="true">{stepLabels.map((label, index) => <span key={label} className={index + 1 === displayedStep ? 'active' : ''}>{label}</span>)}</div>
+        </div>
 
         {error && (
           <div className="booking-error" role="alert">
@@ -943,9 +952,9 @@ export function BookingWizard({
 
         {step === 5 && booking && (
           <div className="wizard-panel success-panel">
-            <div className="success-check">
+            <motion.div className="success-check" initial={reduceMotion ? false : { opacity: 0, scale: .7 }} animate={{ opacity: 1, scale: 1 }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 290, damping: 17 }}>
               <Check aria-hidden="true" />
-            </div>
+            </motion.div>
             <p className="wizard-kicker">RESERVA CRIADA</p>
             <h1 id="booking-title" ref={titleRef} tabIndex={-1}>
               {booking.status === 'cancelled' ? 'Este agendamento foi cancelado.' : booking.status === 'completed' ? 'Atendimento concluído.' : booking.status === 'pending' ? 'Aguardando confirmação.' : booking.status === 'no_show' ? 'Não comparecimento registrado.' : 'Horário confirmado na demonstração.'}
