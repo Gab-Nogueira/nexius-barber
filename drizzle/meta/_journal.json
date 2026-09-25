@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1790074476012,
+      "tag": "0000_steady_mother_askani",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790081947266,
+      "tag": "0001_slippery_guardsmen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790081967601,
+      "tag": "0002_greedy_dakota_north",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1790082171745,
+      "tag": "0003_previous_dreadnoughts",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1790089549930,
+      "tag": "0004_high_cyclops",
+      "breakpoints": true
+    }
+  ]
+}

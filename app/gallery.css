@@ -1,0 +1,17 @@
+.official-logo { width:150px; height:50px; object-fit:contain; }
+@media(max-width:640px) { .site-header {top:52px;} }
+.hero-official-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:2; border-radius:12px; }
+.team-portrait img { width:100%; height:100%; object-fit:cover; }
+.public-photo-gallery { padding:80px max(6vw,20px); }
+.public-photo-gallery h2 { font-size:clamp(32px,5vw,64px); margin-bottom:32px; }
+.public-photo-gallery>div { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:24px; }
+.public-photo-gallery button { text-align:left; cursor:pointer; }
+.public-photo-gallery>div img { width:100%; aspect-ratio:1; object-fit:cover; transition:transform 200ms; }
+.public-photo-gallery button:hover img,.public-photo-gallery button:focus-visible img { transform:scale(1.02); }
+.public-photo-gallery span { display:block; padding-top:12px; }
+.public-photo-gallery dialog { margin:auto; max-width:min(90vw,1000px); max-height:90vh; padding:20px; background:#151319; color:#f7f4fa; border:1px solid #b994ff; }
+.public-photo-gallery dialog::backdrop { background:#000c; }
+.public-photo-gallery dialog img { max-height:65vh; max-width:100%; object-fit:contain; margin:auto; }
+.public-photo-gallery dialog button { padding:12px 20px; border:1px solid #494050; }
+.gallery-close { display:block; margin:0 0 16px auto; }
+@media(prefers-reduced-motion:reduce) { .public-photo-gallery img { transition:none; } }

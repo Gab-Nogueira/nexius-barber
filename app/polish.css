@@ -1,0 +1,63 @@
+/* Nexius mobile-first motion and working surfaces. Content never depends on animation. */
+:root { --ease-nexius:cubic-bezier(.2,.75,.25,1); }
+button,a,input,select,textarea { -webkit-tap-highlight-color:transparent; }
+button,a { touch-action:manipulation; }
+input,select,textarea { font-size:16px; }
+.hero-copy>.eyebrow { animation:brand-rise .65s var(--ease-nexius) both; }
+.hero h1 { animation:brand-rise .8s .08s var(--ease-nexius) both; }
+.hero-statement { animation:brand-rise .8s .2s var(--ease-nexius) both; }
+.hero-body,.hero-actions { animation:brand-rise .75s .3s var(--ease-nexius) both; }
+.x-frame { animation:brand-frame 1.1s var(--ease-nexius) both; }
+.x-line-a { animation:x-connect-a 1.25s .2s var(--ease-nexius) both; }
+.x-line-b { animation:x-connect-b 1.25s .2s var(--ease-nexius) both; }
+@keyframes brand-rise { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
+@keyframes brand-frame { from{opacity:0;transform:translateY(36px) rotate(-3deg)}to{opacity:1;transform:translateY(0) rotate(3deg)} }
+@keyframes x-connect-a { from{opacity:0;transform:translate(-95%,-95%) rotate(42deg) scaleX(.2)}to{opacity:1;transform:translate(-50%,-50%) rotate(42deg) scaleX(1)} }
+@keyframes x-connect-b { from{opacity:0;transform:translate(-5%,-95%) rotate(-42deg) scaleX(.2)}to{opacity:1;transform:translate(-50%,-50%) rotate(-42deg) scaleX(1)} }
+.button,.service-row,.professional-card,.slot-grid button,.category-row button { transition:background .2s,border-color .2s,transform .2s var(--ease-nexius),box-shadow .2s; }
+.button-primary { background:linear-gradient(115deg,#8038ed,#6924d7); box-shadow:0 7px 24px #7c3aed20; }
+.button:active,.service-row:active,.slot-grid button:active { transform:scale(.98); }
+.service-check { border-radius:8px; transition:background .18s,transform .18s; }
+.service-row.selected .service-check { transform:scale(1.08); }
+.professional-card,.date-strip button,.slot-grid button { border-radius:12px; }
+.slot-grid button.selected { box-shadow:0 0 0 2px #b994ff33; }
+.brand-transition img { width:100%;height:100%;object-fit:cover; }
+.success-check { animation:success-pop .65s var(--ease-nexius); }
+@keyframes success-pop { 0%{opacity:0;transform:scale(.7)}65%{transform:scale(1.08)}100%{opacity:1;transform:scale(1)} }
+.mobile-dock { display:none; }
+.button-whatsapp { color:#d6ffe9;background:#16432c;border-color:#31895b;border-radius:12px; }
+.identity-form .whatsapp-opt { grid-column:1/-1;display:flex;gap:12px;align-items:flex-start;font-size:14px;line-height:1.55;color:#e2dbe9; }
+.identity-form .whatsapp-opt input { min-height:22px;width:22px;height:22px;flex:0 0 22px;accent-color:#9a63f9; }
+.staff-login { min-height:100svh;padding:38px 20px;display:flex;flex-direction:column;align-items:center;gap:30px;background:radial-gradient(ellipse at 20% 0,#42205d77,transparent 60%),#0b0a0e; }
+.login-card { width:min(100%,460px);padding:36px;border:1px solid #47354f;border-radius:24px;background:#151218;box-shadow:0 28px 80px #0005;animation:brand-rise .6s var(--ease-nexius); }
+.login-icon { width:48px;height:48px;border-radius:14px;background:#352045;display:grid;place-items:center;color:#c49dff;margin-bottom:24px; }
+.login-card .eyebrow { font-size:12px;margin-bottom:16px; }
+.login-card h1 { font-family:var(--font-display),sans-serif;font-size:clamp(2rem,7vw,2.8rem);letter-spacing:-.06em;line-height:1.05;margin:0; }
+.login-card h1 em { color:#bb91fa;font-style:normal; }
+.login-card>p:not(.eyebrow),.login-card>small { color:#b8adbf;line-height:1.6; }
+.login-card form { display:grid;gap:20px;margin:28px 0; }
+.login-card label { display:grid;gap:9px;font-size:14px; }
+.login-card input { min-height:48px;border-radius:10px; }
+.password-field { position:relative; }.password-field input{padding-right:50px}.password-field button { position:absolute;right:5px;top:3px;width:44px;height:42px;display:grid;place-items:center;background:transparent;border:0;cursor:pointer;color:#c9b4dd; }
+.login-setup { padding:16px;background:#261d31;border:1px solid #73519a;border-radius:12px;line-height:1.6;font-size:14px;overflow-wrap:anywhere; }
+.login-error { color:#ffadb9;font-size:14px; }
+.logout-button { min-height:40px;padding:0 16px;border:1px solid #51405f;border-radius:9px;background:transparent;color:#dfd4e8;cursor:pointer;font-size:14px; }
+.day-heading { display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:28px; }
+.day-heading .eyebrow { font-size:12px;margin-bottom:10px;color:#b994ff; }
+.day-heading h1 { font-family:var(--font-display),sans-serif;font-size:clamp(2rem,4vw,3.5rem);letter-spacing:-.06em;line-height:1.1;margin:0; }
+.day-heading h1 span{color:#a56df5}.day-heading>div>p:last-child{color:#aa9eb5;margin:12px 0 0;line-height:1.5}
+.day-tools,.day-navigation,.day-toolbar,.day-actions { display:flex;align-items:center;gap:8px; }
+.day-toolbar { justify-content:space-between;flex-wrap:wrap;margin-bottom:20px;padding:16px;background:#151218;border:1px solid #382f43;border-radius:16px; }
+.day-navigation input { width:170px;min-height:44px;color-scheme:dark; }.day-toolbar button,.day-tools button { min-height:44px; }.day-navigation button[aria-label]{width:44px;min-width:44px;padding:0}.day-navigation button svg{width:19px;height:19px;flex:0 0 auto}
+.day-stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px; }
+.day-stats article { display:flex;align-items:center;gap:16px;padding:20px;border:1px solid #3a3044;border-radius:16px;background:linear-gradient(115deg,#23172e,#131117); }
+.day-stats svg { color:#b994ff;width:24px;height:24px; }.day-stats span{display:flex;flex-direction:column;gap:6px;font-size:14px;color:#c1b6cb}.day-stats strong{font-size:30px;color:#f7f4fa;line-height:1;font-family:var(--font-display),sans-serif}
+.day-filters{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:14px;margin-bottom:22px}.day-filters label{display:grid;gap:8px;font-size:14px;color:#bdb1c8}.day-filters input,.day-filters select{min-height:46px;border:1px solid #45374e;background:#151218;border-radius:10px;padding:0 12px;color:#eee7f5;width:100%;min-width:0}
+.day-list{border:1px solid #3b3044;border-radius:18px;overflow:hidden;background:#141117}.day-table-head,.day-booking{display:grid;grid-template-columns:90px minmax(150px,1.3fr) minmax(85px,.65fr) minmax(90px,.65fr) minmax(110px,1fr);gap:16px;align-items:center;padding:18px 22px}
+.day-table-head{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#b2a4bf;background:#1b1622}.day-booking{border-top:1px solid #382e40;border-left:3px solid #9762e8;animation:brand-rise .3s var(--ease-nexius)}
+.day-booking time{display:grid;gap:5px}.day-booking time strong{font-size:24px;color:#d1b4ff;font-weight:750}.day-booking time small,.day-client small{color:#b0a2bd;font-size:12px}.day-client h2{margin:0 0 7px;font-size:17px;font-weight:700;overflow-wrap:anywhere}.day-client p{margin:0 0 7px;color:#d0c5da;font-size:14px}.day-professional{font-size:14px;font-weight:600}.day-booking .status{font-size:11px;white-space:normal;width:max-content;max-width:100%;border-radius:6px}.day-actions{flex-wrap:wrap}.day-actions a{width:38px;height:38px;display:grid;place-items:center;background:#26202e;border-radius:9px;color:#cdb3eb}.day-actions a:first-child{color:#9bedb5}.day-actions button{min-height:38px;font-size:12px}.day-completed{border-left-color:#54bba0}.day-cancelled,.day-no_show{border-left-color:#bb6d7b;background:#1d151b}.day-empty{padding:55px 24px;text-align:center;color:#c2b7cd;display:grid;justify-items:center;gap:12px}.day-empty>svg{width:40px;height:40px;color:#a278da}.day-empty h2{margin:8px 0;font-size:21px}.day-empty p{margin:0 0 12px}.day-footnote{font-size:13px;color:#a79ab3;line-height:1.6;margin-top:18px}
+@media(min-width:768px) and (max-width:1180px){.day-heading{align-items:flex-start;flex-direction:column}.day-table-head{display:none}.day-booking{grid-template-columns:85px 1fr auto;gap:12px}.day-booking .day-professional{grid-column:2}.day-booking .status{grid-column:3;grid-row:1}.day-actions{grid-column:3;grid-row:2/4}.admin-content{padding:28px 22px}}
+@media(max-width:980px){.booking-main{padding-bottom:160px}.booking-summary{padding-bottom:max(18px,env(safe-area-inset-bottom));box-shadow:0 -8px 40px #0007}.summary-next{border-radius:12px!important;min-height:52px!important}.booking-progress{margin-bottom:28px}.wizard-panel h1{font-size:clamp(2.1rem,6.5vw,3.8rem)}.service-controls{grid-template-columns:1fr}.service-row{padding:20px 12px}.service-copy small{font-size:14px}.mobile-summary-total{font-size:14px}.mobile-dock{position:fixed;display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:6px;left:16px;right:16px;bottom:max(14px,env(safe-area-inset-bottom));z-index:45;padding:8px;border:1px solid #5a4272;border-radius:20px;background:#17111eeF;backdrop-filter:blur(18px);box-shadow:0 12px 40px #0008;transform:translateY(150%);visibility:hidden;transition:transform .35s var(--ease-nexius),visibility .35s}.mobile-dock.dock-visible{transform:translateY(0);visibility:visible}.mobile-dock a{min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:#d0bedf}.mobile-dock svg{width:19px;height:19px}.mobile-dock .dock-book{background:#8038ed;color:white;border-radius:13px;font-size:14px;flex-direction:row;gap:8px;font-weight:700}.site-footer{padding-bottom:115px}}
+@media(max-width:767px){.day-heading{flex-direction:column;align-items:stretch}.day-tools{display:grid;grid-template-columns:1fr 1fr}.day-toolbar{padding:12px}.day-navigation{width:100%;gap:5px}.day-navigation label{flex:1;min-width:0}.day-navigation input{width:100%}.day-navigation button:not([aria-label]){padding:0 10px}.day-stats{gap:7px}.day-stats article{padding:15px 12px;gap:6px}.day-stats svg{display:none}.day-stats span{font-size:12px}.day-stats strong{font-size:25px}.day-filters{grid-template-columns:1fr 1fr;gap:10px}.day-filters label:last-child{grid-column:1/-1}.day-table-head{display:none}.day-booking{grid-template-columns:76px minmax(0,1fr);gap:10px;padding:18px 15px}.day-booking time{align-self:start}.day-booking time strong{font-size:23px}.day-professional{grid-column:2}.day-booking .status{grid-column:1;grid-row:2/4;font-size:10px}.day-actions{grid-column:2}.day-client h2{font-size:18px}.day-actions button{font-size:13px}.admin-topbar>div:last-child a{display:none}.day-heading h1{font-size:2.5rem}.login-card{padding:28px 24px}.identity-form{grid-template-columns:1fr;border-radius:16px}.review-box{border-radius:16px}.identity-form input{min-height:50px;font-size:16px}.date-strip{scroll-snap-type:x mandatory}.date-strip button{scroll-snap-align:start}.hero{min-height:auto;padding:126px 24px 38px;gap:28px}.hero h1{font-size:clamp(3.8rem,17.8vw,7rem);line-height:.88}.hero h1 span{transform:none}.hero-statement{font-size:clamp(1.8rem,8vw,3rem);margin-top:12px}.hero-body{font-size:16px;line-height:1.65;margin-top:22px}.hero-actions{margin-top:26px;gap:10px}.hero-actions .button{min-height:54px;border-radius:12px}.hero-art{min-height:230px;margin-top:12px}.x-frame{width:100%;height:230px;min-width:0;aspect-ratio:auto;border-radius:20px;transform:rotate(3deg);background:url('/nexius-concrete-x.png') center 45%/cover}.brand-panel{inset:30% 15%;border-radius:8px}.brand-panel p{font-size:38px}.brand-panel span{font-size:11px}.hero-official-photo{border-radius:20px}.manifesto{padding-top:68px;padding-bottom:68px}.brand-transition{min-height:380px}.public-services,.public-team,.contact-section{padding-top:65px;padding-bottom:65px}.public-service-list article{padding:24px 0}.public-service-list article>strong{font-size:22px}.public-service-list article>a{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#6e2fd6;border:0}.public-service-list article>a svg{width:19px;height:19px;flex:0 0 auto}.team-editorial{gap:28px}.team-portrait{border-radius:18px;min-height:300px}.team-editorial article:nth-child(even){margin-top:0}.contact-grid article{border-radius:16px;min-height:230px}.contact-grid{gap:12px;background:transparent}.section-index{font-size:12px}.site-header{top:52px;height:66px}.site-header .wordmark{font-size:1.25rem}.client-welcome h1{font-size:2.8rem}.client-booking-card{border-radius:18px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:420px){.hero h1{font-size:clamp(2rem,17.8vw,4.8rem)}.wizard-panel h1,.day-heading h1{overflow-wrap:anywhere}}

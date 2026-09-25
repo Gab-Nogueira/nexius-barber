@@ -1,0 +1,36 @@
+{
+  "widths": [
+    {
+      "inner": 360,
+      "scroll": 360
+    },
+    {
+      "inner": 390,
+      "scroll": 390
+    },
+    {
+      "inner": 768,
+      "scroll": 753
+    },
+    {
+      "inner": 1024,
+      "scroll": 1009
+    },
+    {
+      "inner": 1440,
+      "scroll": 1425
+    }
+  ],
+  "journey": true,
+  "catalog40": true,
+  "keyboard": true,
+  "errors": [],
+  "performance": {
+    "environment": "Chrome local / Vite dev, sem throttling, cache aquecido",
+    "domContentLoadedMs": 1158,
+    "loadMs": 1166,
+    "transferBytes": 122042
+  },
+  "landscape": true,
+  "zoom200Reflow": true
+}

@@ -267,4 +267,3 @@ Foi usado ImageGen apenas para uma composição abstrata: concreto escuro, linha
 6. Encerrar com a lista de dados pendentes e o plano de transição da agenda atual.
 
 O benefício demonstrável é reunir marca e operação em uma experiência própria. Aquisição, conversão ou crescimento só podem ser medidos depois de uma publicação real; este projeto não faz promessas numéricas.
-

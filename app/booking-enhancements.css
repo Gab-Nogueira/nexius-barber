@@ -1,0 +1,10 @@
+.review-box { margin:24px 0; border:1px solid #51405f; background:#17121d; padding:24px; }
+.review-box h2 { font-size:20px; margin-bottom:18px; }
+.review-box p { margin:12px 0; color:#d0c7d9; line-height:1.6; }
+.review-box dl { display:grid; gap:14px; margin:20px 0; }
+.review-box dl>div { display:grid; grid-template-columns:1fr 2fr; gap:16px; }
+.review-box dt { color:#bdb5c7; }
+.review-box dd { text-align:right; }
+.mobile-summary-total { display:none; }
+@media(max-width:980px) { .mobile-summary-total { display:flex; gap:12px; justify-content:space-between; padding-bottom:12px; font-size:13px; } .booking-summary>button:not(.summary-next) {display:none;} }
+@media(max-width:640px) { .review-box {padding:20px;} .review-box dl>div {grid-template-columns:1fr;} .review-box dd {text-align:left;font-weight:600;} }

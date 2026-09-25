@@ -1,0 +1,5 @@
+.account-contact { margin-bottom:32px; border:1px solid #38303f; padding:18px 22px; background:#151319; }
+.account-contact summary { cursor:pointer; min-height:30px; }
+.account-contact form { display:grid; gap:16px; margin-top:20px; }
+.account-contact label { display:grid; gap:8px; }
+.account-contact p { color:#bdb5c7; font-size:14px; overflow-wrap:anywhere; }

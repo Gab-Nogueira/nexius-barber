@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["oxc", "typescript", "unicorn", "react", "jsx-a11y", "nextjs"],
+  "ignorePatterns": ["components/ui/**", "hooks/use-mobile.ts"],
+  "rules": {
+    "jsx-a11y/label-has-associated-control": ["warn", { "controlComponents": ["Input"] }],
+    "react/react-compiler": "off",
+    "nextjs/no-html-link-for-pages": "off",
+    "nextjs/no-img-element": "off",
+    "jsx-a11y/prefer-tag-over-role": "off"
+  }
+}
