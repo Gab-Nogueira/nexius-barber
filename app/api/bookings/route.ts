@@ -26,6 +26,7 @@ export async function POST(request: Request) {
       serviceIds: Array.isArray(body.serviceIds) ? body.serviceIds.filter((value): value is string => typeof value === 'string') : [],
       professionalId: textValue(body.professionalId), startAt: textValue(body.startAt),
       name: textValue(body.name), phone: textValue(body.phone), idempotencyKey: textValue(body.idempotencyKey),
+      email: textValue(body.email),
       quoteRevision: typeof body.quoteRevision === 'number' ? body.quoteRevision : -1,
     });
     return Response.json({ booking, whatsappUrl: await bookingWhatsApp(booking), notification: { status: 'test_logged', message: 'Reserva criada. Nenhuma mensagem externa foi enviada.' } }, { status: 201, headers: { 'Cache-Control': 'no-store' } });

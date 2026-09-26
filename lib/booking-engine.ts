@@ -433,6 +433,7 @@ export async function createBooking(
     startAt: string;
     name: string;
     phone: string;
+    email?: string;
     idempotencyKey: string;
     origin?: 'public' | 'admin';
     quoteRevision?: number;
@@ -447,6 +448,9 @@ export async function createBooking(
       'invalid_name',
     );
   const phoneDigits = input.phone.replace(/\D/g, '');
+  const email = input.email?.trim() || null;
+  if (email && (email.length > 254 || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)))
+    throw new ApiError(400, 'Informe um e-mail válido.', 'invalid_email');
   if (phoneDigits.length < 10 || phoneDigits.length > 13)
     throw new ApiError(400, 'Informe um telefone válido.', 'invalid_phone');
   if (!/^[a-zA-Z0-9_-]{12,100}$/.test(input.idempotencyKey))
@@ -478,6 +482,7 @@ export async function createBooking(
       startAt: startDate.toISOString(),
       name: input.name.trim(),
       phoneDigits,
+      ...(email ? { email } : {}),
     }),
   );
   const priorAttempt = await db
@@ -537,9 +542,9 @@ export async function createBooking(
   const now = new Date().toISOString();
   const insertBooking = db
     .prepare(`INSERT INTO bookings
-    (id, reference, customer_user_id, client_name, client_phone, professional_id, start_at, end_at, status, origin,
+    (id, reference, customer_user_id, client_name, client_phone, client_email, professional_id, start_at, end_at, status, origin,
       idempotency_key, request_hash, total_cents, timezone, policy_version, created_at, updated_at, buffer_minutes, cancellation_limit_hours)
-    SELECT ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     WHERE NOT EXISTS (
       SELECT 1 FROM bookings WHERE professional_id = ? AND status IN ('pending', 'confirmed')
         AND start_at < ? AND strftime('%Y-%m-%dT%H:%M:%fZ', end_at, '+' || buffer_minutes || ' minutes') > ?
@@ -553,6 +558,7 @@ export async function createBooking(
       user.userId,
       input.name.trim(),
       input.phone.trim(),
+      email,
       input.professionalId,
       startDate.toISOString(),
       endAt,
@@ -660,7 +666,7 @@ export async function getBooking(
 ): Promise<BookingRecord> {
   const db = database();
   const booking = await db
-    .prepare(`SELECT b.id, b.reference, b.client_name as clientName, b.client_phone as clientPhone,
+    .prepare(`SELECT b.id, b.reference, b.client_name as clientName, b.client_phone as clientPhone, b.client_email as clientEmail, b.updated_at as updatedAt,
       b.professional_id as professionalId, p.name as professionalName, b.start_at as startAt, b.end_at as endAt,
       b.status, b.total_cents as totalCents, b.created_at as createdAt, b.customer_user_id as customerUserId,
       b.cancellation_limit_hours as cancellationLimitHours, b.timezone, b.policy_version as policyVersion
@@ -874,7 +880,7 @@ export async function listAllBookings() {
 // D1's per-request query budget even when the history grows.
 export async function listBookingRecords(scope: 'all' | 'customer' | 'professional', owner = ''): Promise<BookingRecord[]> {
   const where = scope === 'customer' ? 'WHERE b.customer_user_id = ?' : scope === 'professional' ? 'WHERE b.professional_id = ?' : '';
-  const statement = database().prepare(`SELECT b.id,b.reference,b.client_name AS clientName,b.client_phone AS clientPhone,
+  const statement = database().prepare(`SELECT b.id,b.reference,b.client_name AS clientName,b.client_phone AS clientPhone,b.client_email AS clientEmail,b.updated_at AS updatedAt,
     b.professional_id AS professionalId,p.name AS professionalName,b.start_at AS startAt,b.end_at AS endAt,b.status,
     b.total_cents AS totalCents,b.created_at AS createdAt,b.cancellation_limit_hours AS cancellationLimitHours,b.timezone,b.policy_version AS policyVersion,
     (SELECT json_group_array(json_object('id',service_id,'name',name_snapshot,'priceCents',price_cents_snapshot,'durationMinutes',duration_minutes_snapshot))

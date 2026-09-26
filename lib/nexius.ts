@@ -35,6 +35,7 @@ export type BookingRecord = {
   reference: string;
   clientName: string;
   clientPhone: string;
+  clientEmail: string | null;
   professionalId: string;
   professionalName: string;
   startAt: string;
@@ -42,6 +43,7 @@ export type BookingRecord = {
   status: string;
   totalCents: number;
   createdAt: string;
+  updatedAt: string;
   cancellationLimitHours: number;
   timezone: string;
   policyVersion: string;

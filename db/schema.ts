@@ -105,6 +105,7 @@ export const bookings = sqliteTable('bookings', {
   customerUserId: text('customer_user_id').notNull().references(() => users.id),
   clientName: text('client_name').notNull(),
   clientPhone: text('client_phone').notNull(),
+  clientEmail: text('client_email'),
   professionalId: text('professional_id').notNull().references(() => professionals.id),
   startAt: text('start_at').notNull(),
   endAt: text('end_at').notNull(),

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { MediaPicker as PhotoSelect } from './media-picker';
 
 type Category = {
   id: string;
@@ -77,6 +78,7 @@ export type ManagedBooking = {
   reference: string;
   clientName: string;
   clientPhone: string;
+  clientEmail?: string | null;
   professionalId: string;
   professionalName: string;
   startAt: string;
@@ -116,29 +118,6 @@ const normalize = (value: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase();
 
-function PhotoSelect({
-  media,
-  value,
-  onChange,
-}: {
-  media: Media[];
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <label>
-      Imagem da biblioteca
-      <select value={value} onChange={(event) => onChange(event.target.value)}>
-        <option value="">Sem imagem</option>
-        {media.map((item) => (
-          <option key={item.id} value={item.id}>
-            {item.altText}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
 function CategoryEditor({
   category,
   action,
@@ -206,6 +185,7 @@ function ServiceForm({
   action,
   working,
 }: Props & { service?: Service }) {
+  const [uploading, setUploading] = useState(false);
   const [value, setValue] = useState({
     name: service?.name || '',
     description: service?.description || '',
@@ -226,6 +206,7 @@ function ServiceForm({
       className="management-form"
       onSubmit={(event) => {
         event.preventDefault();
+        if (uploading) return;
         void action(
           { action: 'service.save', id: service?.id, ...value },
           'Serviço salvo. Os preços de reservas anteriores foram preservados.',
@@ -297,6 +278,16 @@ function ServiceForm({
           }
         />
       </label>
+      <div className="form-wide"><PhotoSelect
+        media={data.media}
+        value={value.photoId}
+        label={`Foto do serviço ${value.name}`}
+        onBusyChange={setUploading}
+        onChange={(photoId) => setValue(current => ({ ...current, photoId }))}
+      /></div>
+      <details className="form-wide management-advanced">
+        <summary>Opções avançadas (combos e organização)</summary>
+        <div className="management-form">
       <label>
         Origem
         <select
@@ -325,11 +316,6 @@ function ServiceForm({
           }
         />
       </label>
-      <PhotoSelect
-        media={data.media}
-        value={value.photoId}
-        onChange={(photoId) => setValue({ ...value, photoId })}
-      />
       <label>
         Adicional depende de
         <select
@@ -387,6 +373,8 @@ function ServiceForm({
             </label>
           ))}
       </fieldset>
+        </div>
+      </details>
       <label className="check-label">
         <input
           type="checkbox"
@@ -397,8 +385,8 @@ function ServiceForm({
         />
         Ativo no catálogo
       </label>
-      <Button disabled={working} type="submit">
-        Salvar serviço
+      <Button disabled={working || uploading} type="submit">
+        {uploading ? 'Aguarde a foto…' : 'Salvar serviço'}
       </Button>
     </form>
   );
@@ -424,7 +412,7 @@ export function CatalogManager(props: Props) {
         <ServiceForm {...props} />
       </details>
       {visible.map((service) => (
-        <details className="admin-panel" key={service.id}>
+        <details className="admin-panel" key={service.id} data-service-id={service.id}>
           <summary>
             {service.name}{' '}
             <small>
@@ -573,6 +561,7 @@ function ProfessionalForm({
   professional,
   ...props
 }: Props & { professional?: Professional }) {
+  const [uploading, setUploading] = useState(false);
   const [value, setValue] = useState({
     name: professional?.name || '',
     active: professional ? !!professional.active : false,
@@ -590,6 +579,7 @@ function ProfessionalForm({
       className="management-form"
       onSubmit={(event) => {
         event.preventDefault();
+        if (uploading) return;
         void props.action(
           {
             action: 'professional.save',
@@ -610,8 +600,10 @@ function ProfessionalForm({
           onChange={(event) => setValue({ ...value, name: event.target.value })}
         />
       </label>
+      <details className="management-advanced">
+        <summary>Acesso da equipe (opcional)</summary>
       <label>
-        ID da conta autenticada (opcional)
+        Vincular conta existente (ID)
         <Input
           value={value.userId}
           onChange={(event) =>
@@ -619,10 +611,13 @@ function ProfessionalForm({
           }
         />
       </label>
+      </details>
       <PhotoSelect
         media={props.data.media}
         value={value.photoId}
-        onChange={(photoId) => setValue({ ...value, photoId })}
+        label={`Foto de ${value.name || 'profissional'}`}
+        onBusyChange={setUploading}
+        onChange={(photoId) => setValue(current => ({ ...current, photoId }))}
       />
       <label>
         Ordem
@@ -742,8 +737,8 @@ function ProfessionalForm({
         />
         Profissional ativo
       </label>
-      <Button disabled={props.working} type="submit">
-        Salvar profissional
+      <Button disabled={props.working || uploading} type="submit">
+        {uploading ? 'Aguarde a foto…' : 'Salvar profissional'}
       </Button>
     </form>
   );
@@ -1180,6 +1175,7 @@ export function AgendaManager({
             {booking.services.map((item) => item.name).join(' + ')} ·{' '}
             {money(booking.totalCents)} · Contato: {booking.clientPhone}
           </p>
+          {booking.clientEmail && <p>E-mail: {booking.clientEmail}</p>}
           {['confirmed', 'pending'].includes(booking.status) && (
             <>
               <div className="table-actions">
@@ -1229,6 +1225,11 @@ export function AgendaManager({
 
 export function ContentManager({ data, action, working }: Props) {
   const [value, setValue] = useState(data.content);
+  const [extraMedia, setExtraMedia] = useState<Media[]>([]);
+  const [uploadCount, setUploadCount] = useState(0);
+  const mediaLibrary = [...data.media, ...extraMedia.filter(item => !data.media.some(existing => existing.id === item.id))];
+  const onBusyChange = (busy: boolean) => setUploadCount(count => Math.max(0, count + (busy ? 1 : -1)));
+  const onUploaded = (item: Media) => setExtraMedia(current => [...current, item]);
   const fields: Record<string, string> = {
     slogan: 'Slogan',
     hero_text: 'Texto da abertura',
@@ -1245,6 +1246,7 @@ export function ContentManager({ data, action, working }: Props) {
       className="admin-panel management-form"
       onSubmit={(event) => {
         event.preventDefault();
+        if (uploadCount) return;
         void action(
           {
             action: 'content.save',
@@ -1277,17 +1279,23 @@ export function ContentManager({ data, action, working }: Props) {
       <fieldset>
         <legend>Logo oficial</legend>
         <PhotoSelect
-          media={data.media}
+          media={mediaLibrary}
+          label="Logo oficial"
+          onBusyChange={onBusyChange}
+          onUploaded={onUploaded}
           value={value.logo_image || ''}
-          onChange={(id) => setValue({ ...value, logo_image: id })}
+          onChange={(id) => setValue(current => ({ ...current, logo_image: id }))}
         />
       </fieldset>
       <fieldset>
         <legend>Foto da abertura</legend>
         <PhotoSelect
-          media={data.media}
+          media={mediaLibrary}
+          label="Foto da abertura"
+          onBusyChange={onBusyChange}
+          onUploaded={onUploaded}
           value={value.hero_image || ''}
-          onChange={(id) => setValue({ ...value, hero_image: id })}
+          onChange={(id) => setValue(current => ({ ...current, hero_image: id }))}
         />
       </fieldset>
       {['gallery_images', 'environment_images'].map((key) => (
@@ -1296,8 +1304,12 @@ export function ContentManager({ data, action, working }: Props) {
             {key === 'gallery_images' ? 'Trabalhos' : 'Ambiente'} — selecione
             fotos autorizadas
           </legend>
+          <PhotoSelect media={mediaLibrary} value="" library={false}
+            label={key === 'gallery_images' ? 'Foto de um trabalho' : 'Foto do ambiente'}
+            onBusyChange={onBusyChange} onUploaded={onUploaded}
+            onChange={id => setValue(current => ({ ...current, [key]: [...new Set([...(current[key] || '').split(',').filter(Boolean), id])].join(',') }))} />
           <div className="media-library">
-            {data.media.map((media) => {
+            {mediaLibrary.map((media) => {
               const ids = (value[key] || '').split(',').filter(Boolean);
               return (
                 <label key={media.id}>
@@ -1326,12 +1338,12 @@ export function ContentManager({ data, action, working }: Props) {
               );
             })}
           </div>
-          {!data.media.length && (
-            <p>Envie imagens abaixo para disponibilizá-las aqui.</p>
+          {!mediaLibrary.length && (
+            <p>Escolha uma foto acima. Ela já ficará selecionada para esta seção.</p>
           )}
         </fieldset>
       ))}
-      <Button disabled={working} type="submit">
+      <Button disabled={working || uploadCount > 0} type="submit">
         Salvar conteúdo público
       </Button>
     </form>

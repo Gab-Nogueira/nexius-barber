@@ -36,6 +36,13 @@
       "when": 1790089549930,
       "tag": "0004_high_cyclops",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1790387534296,
+      "tag": "0005_careless_harpoon",
+      "breakpoints": true
     }
   ]
 }

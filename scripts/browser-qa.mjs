@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { testAdmin } from '../tests/local-auth.mjs';
 
@@ -179,16 +179,18 @@ try {
     await wait('!!document.querySelector(".slot-grid button")', 45000);
   }
   await click('.slot-grid button');
+  await screenshot('horarios-mobile.png');
   await click('.summary-next');
   await wait('!!document.querySelector("#name")');
   await fill('#name', 'Cliente demonstrativo QA');
   await fill('#phone', '12999999999');
+  await fill('#email', 'cliente-qa@example.test');
   await evaluate('document.querySelector(".whatsapp-opt input")?.click()');
   await screenshot('revisao-mobile.png');
   await click('.summary-next');
   await wait('!!document.querySelector(".success-panel")');
   const link = await evaluate(
-    '[...document.querySelectorAll("a")].find(el=>el.textContent.includes("calendário")).getAttribute("href")',
+    'document.querySelector(".calendar-buttons a[href$=calendar]").getAttribute("href")',
   );
   bookingId = link.split('/')[3];
   assert.ok(bookingId);
@@ -250,12 +252,37 @@ try {
       `[...document.querySelectorAll('[data-sidebar="menu-button"]')].find(el=>el.textContent.trim()===${JSON.stringify(text)}).click()`,
     );
     await wait('!!document.querySelector(".management-stack")');
+    if(text === 'Catálogo') {
+      const selector = `[data-service-id="${serviceIds[0]}"]`;
+      await evaluate(`document.querySelector(${JSON.stringify(selector)}).open=true`);
+      await command('DOM.enable');
+      const root = await command('DOM.getDocument');
+      const input = await command('DOM.querySelector',{nodeId:root.root.nodeId,selector:selector+' input[type=file]'});
+      await command('DOM.setFileInputFiles',{nodeId:input.nodeId,files:[resolve('public/demo-cut-detail.webp')]});
+      await wait(`!!document.querySelector(${JSON.stringify(selector+' .media-upload-success')})`);
+      await wait(`document.querySelector(${JSON.stringify(selector+' .media-picker-preview')})?.naturalWidth>0`);
+      await evaluate(`document.querySelector(${JSON.stringify(selector+' .media-picker')}).scrollIntoView({behavior:'instant',block:'center'})`);
+      await screenshot('foto-servico-desktop.png');
+      await size(390,844);
+      assert.ok(await evaluate('document.documentElement.scrollWidth<=innerWidth+1'));
+      await screenshot('foto-servico-mobile.png');
+      await size(1440,1000);
+      await click(selector+' button[type=submit]');
+      await wait('!document.querySelector(".loading-state")');
+      const catalog=await (await fetch(origin+'/api/catalog')).json();
+      const uploaded=catalog.services.find(service=>service.id===serviceIds[0]);
+      assert.ok(uploaded?.photoId,'Foto deve persistir no serviço após salvar');
+      const photo=await fetch(origin+'/api/media/'+uploaded.photoId);assert.equal(photo.status,200);assert.match(photo.headers.get('content-type'),/image\/webp/);
+      report.imageUpload = true;
+      await evaluate('scrollTo(0,0)');
+    }
     await screenshot(
       `gestao-${text === 'Catálogo' ? 'catalogo' : text === 'Equipe e horários' ? 'equipe' : text === 'Fotos e conteúdo' ? 'conteudo' : 'agenda'}.png`,
     );
   }
   await size(390, 844);
   await screenshot('agenda-mobile.png');
+  assert.ok(await evaluate('!document.body.innerText.includes("Auditoria")'));
   await navigate('/');
   await wait('!!document.querySelector(".hero")');
   for (const width of [360, 390, 768, 1024, 1440]) {

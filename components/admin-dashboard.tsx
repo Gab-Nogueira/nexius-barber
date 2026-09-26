@@ -10,7 +10,6 @@ import {
   LayoutDashboard,
   Menu,
   Scissors,
-  ShieldCheck,
   UsersRound,
 } from 'lucide-react';
 import { Button } from './ui/button';
@@ -40,7 +39,7 @@ import {
   type Settings,
 } from './management-forms';
 
-type Section = 'today' | 'overview' | 'agenda' | 'catalog' | 'team' | 'content' | 'audit';
+type Section = 'today' | 'overview' | 'agenda' | 'catalog' | 'team' | 'content';
 type DashboardData = {
   bookings: ManagedBooking[];
   management: ManagementData;
@@ -78,7 +77,6 @@ const navigation = [
   { id: 'catalog', label: 'Catálogo', icon: Scissors },
   { id: 'team', label: 'Equipe e horários', icon: UsersRound },
   { id: 'content', label: 'Fotos e conteúdo', icon: FileImage },
-  { id: 'audit', label: 'Auditoria', icon: ShieldCheck },
 ] as const;
 const money = (cents: number) =>
   (cents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -97,8 +95,6 @@ export function AdminDashboard() {
     endAt: '',
     reason: '',
   });
-  const [uploadFile, setUploadFile] = useState<File | null>(null),
-    [uploadAlt, setUploadAlt] = useState('');
   const refresh = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true);
     try {
@@ -146,32 +142,6 @@ export function AdminDashboard() {
       setError(
         caught instanceof Error ? caught.message : 'Não foi possível salvar.',
       );
-    } finally {
-      setWorking(false);
-    }
-  }
-  async function upload() {
-    if (!uploadFile) return;
-    setWorking(true);
-    setError('');
-    const form = new FormData();
-    form.set('file', uploadFile);
-    form.set('altText', uploadAlt);
-    try {
-      const response = await fetch('/api/admin/upload', {
-        method: 'POST',
-        body: form,
-      });
-      const payload = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(payload.error);
-      setNotice(
-        'Imagem armazenada. Selecione onde publicá-la nos campos de conteúdo.',
-      );
-      setUploadFile(null);
-      setUploadAlt('');
-      await refresh();
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : 'Falha no envio.');
     } finally {
       setWorking(false);
     }
@@ -396,7 +366,7 @@ export function AdminDashboard() {
                         event.preventDefault();
                         void action(
                           { action: 'block.create', ...block },
-                          'Bloqueio criado e auditado.',
+                          'Bloqueio criado.',
                         );
                       }}
                     >
@@ -494,63 +464,8 @@ export function AdminDashboard() {
               {section === 'content' && (
                 <section className="management-stack">
                   <h1>Conteúdo e imagens</h1>
-                  <article className="admin-panel">
-                    <h2>1. Envie sua foto</h2>
-                    <p>
-                      Escolha uma foto do celular ou computador, descreva o que aparece e toque em Armazenar imagem. JPG, PNG ou WebP, até 5 MB. Depois selecione onde publicar no passo 2. Para retratos e serviços, use também Equipe ou Catálogo.
-                    </p>
-                    <div className="management-form">
-                      <label>
-                        Arquivo
-                        <Input
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={(event) =>
-                            setUploadFile(event.target.files?.[0] || null)
-                          }
-                        />
-                      </label>
-                      <label>
-                        O que aparece na foto? (descrição acessível)
-                        <Input
-                          value={uploadAlt}
-                          onChange={(event) => setUploadAlt(event.target.value)}
-                          maxLength={180}
-                        />
-                      </label>
-                      <Button
-                        disabled={
-                          working || !uploadFile || uploadAlt.length < 3
-                        }
-                        onClick={() => void upload()}
-                      >
-                        Armazenar imagem
-                      </Button>
-                    </div>
-                  </article>
-                  <h2>2. Escolha onde aparece e salve</h2>
+                  <p>Escolha a foto no lugar onde ela deve aparecer, confira a prévia e salve. Fotos dos cortes ficam em Catálogo; retratos, em Equipe e horários.</p>
                   <ContentManager data={data.management} action={action} working={working} />
-                </section>
-              )}
-              {section === 'audit' && (
-                <section className="management-stack">
-                  <h1>Auditoria</h1>
-                  <p>Últimas 100 alterações. Não contém senhas nem tokens.</p>
-                  {data.audit.map((entry, index) => (
-                    <details
-                      className="admin-panel"
-                      key={`${entry.entityId}-${index}`}
-                    >
-                      <summary>
-                        {entry.action}
-                        <small>
-                          {entry.actorName} · {dateTime(entry.createdAt)}
-                        </small>
-                      </summary>
-                      <p>Recurso: {entry.entityId}</p>
-                      <pre>{entry.detailJson}</pre>
-                    </details>
-                  ))}
                 </section>
               )}
             </>

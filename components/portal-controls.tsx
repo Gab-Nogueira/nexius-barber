@@ -11,7 +11,7 @@ const tourSteps = [
   { id: 'inicio', title: 'Primeiro, encontre seu horário', text: 'O agendamento começa aqui e continua em poucos passos.' },
   { id: 'servicos', title: 'Serviços com preço visível', text: 'Veja o catálogo antes de escolher. Os dados de demonstração estão identificados.' },
   { id: 'equipe', title: 'Escolha o profissional', text: 'O cliente pode partir daqui direto para a agenda do profissional.' },
-  { id: 'sistema', title: 'A operação por trás do site', text: 'A gestão reúne agenda do dia, indicadores e exportação, com acesso separado.' },
+  { id: 'contato', title: 'Tudo pronto para sua visita', text: 'Encontre o endereço e os canais da barbearia. Depois de reservar, você pode salvar o horário no seu calendário.' },
 ];
 
 export function PortalControls({ whatsappNumber }: { whatsappNumber?: string }) {

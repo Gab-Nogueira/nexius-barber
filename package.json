@@ -17,7 +17,7 @@
     "test:browser": "node scripts/browser-qa.mjs",
     "test:browser:leonardo": "node scripts/browser-leonardo-qa.mjs",
     "test:browser:experience": "node scripts/browser-experience-qa.mjs",
-    "test:unit": "node --test tests/migration-preview.test.mjs tests/message-export.test.mjs"
+    "test:unit": "node --test tests/migration-preview.test.mjs tests/message-export.test.mjs tests/calendar.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

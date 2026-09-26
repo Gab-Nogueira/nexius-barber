@@ -21,7 +21,7 @@ O endereço de demonstração deste projeto é `https://nexius-barber-demo.gabsi
 - Portal mobile-first com contraste preto/branco/roxo, textura discreta, malha em X, spotlight, reveal e microinterações; o botão **Ver como funciona** conduz um tour para apresentar o sistema ao dono.
 - Indicador de horários de hoje consulta a API existente para o primeiro serviço observado. É indicativo, nunca uma promessa de vaga: a disponibilidade é revalidada na confirmação.
 - Comparador antes/depois, galeria e textos de experiência identificados como **demonstração**. As duas imagens geradas por IA não representam clientes, equipe nem trabalhos reais; veja [proveniência dos materiais](docs/MATERIAIS-DEMO.md).
-- Prévia ilustrativa do painel, comparação da rotina manual com a agenda online e contato comercial de apresentação pelo WhatsApp informado pelo desenvolvedor. Esse contato não substitui o WhatsApp oficial da Nexius.
+- Composição revisada para celular, tablet e desktop; seção promocional do sistema removida. Créditos do desenvolvedor no rodapé não substituem o contato oficial da Nexius.
 - Tema claro/escuro opcional no portal público (preferência local e preferência do sistema), ícone da Nexius, manifesto instalável e aviso offline. A agenda exige conexão; o PWA não cria reservas offline.
 - Animações e transições respeitam `prefers-reduced-motion`; em telas táteis a rolagem continua nativa.
 
@@ -31,11 +31,11 @@ O endereço de demonstração deste projeto é `https://nexius-barber-demo.gabsi
 - Disponibilidade calculada no servidor em `America/Sao_Paulo`, incluindo grade, pausa, bloqueios, antecedência, horizonte, duração completa e conflitos.
 - Inserção atômica por `INSERT ... SELECT ... WHERE NOT EXISTS`, executada com itens, auditoria e notificação local em um lote transacional D1.
 - Idempotência com chave única e hash da requisição; repetição compatível recupera a reserva e reutilização incompatível é recusada.
-- Área do cliente autenticada, com próximos horários, histórico, remarcação atômica, cancelamento e arquivo `.ics`.
+- Área do cliente protegida por sessão, com próximos horários, histórico, remarcação atômica, cancelamento, Google Agenda e arquivo `.ics` com alerta de 1 hora. Salvar na agenda é uma ação do cliente; não há convite automático por e-mail nem sincronização de alterações.
 - Painel com agenda diária/semanal em listas responsivas, filtros, reserva manual, remarcação, cancelamento, conclusão e não comparecimento.
 - Cadastro/edição de categorias, serviços, adicionais, combos, fotos, ordem e situação; habilitações e preços/durações por profissional.
 - Equipe, vinculação de conta, escala semanal, pausas, funcionamento da unidade, fechamentos e bloqueios; conflitos futuros impedem alterações silenciosas.
-- Textos, contatos, links, logo, fotos da abertura, galerias de trabalhos/ambiente, ampliação acessível, upload persistente e auditoria.
+- Textos, contatos, links, logo, fotos da abertura, galerias de trabalhos/ambiente e ampliação acessível. Upload direto no campo da foto, com prévia e otimização no navegador; registros de segurança internos, sem aba de auditoria.
 - Indicadores por mês com minutos da grade, pausas e bloqueios; valor previsto e valor dos serviços concluídos separados de recebimentos.
 - Área do profissional restrita à própria agenda e às ações permitidas.
 - Persistência relacional em Cloudflare D1 e arquivos em R2.
@@ -43,6 +43,9 @@ O endereço de demonstração deste projeto é `https://nexius-barber-demo.gabsi
 - Estados de carregamento, vazio, erro, conflito e sucesso, foco visível e suporte a `prefers-reduced-motion`.
 - Revisão oficial de preço/duração/política por profissional, resumo visível também no celular e recuperação da mesma tentativa após timeout.
 - Dados de contato do cliente e proteção contra leitura/alteração de reservas de outra conta.
+- O agendamento público pede nome, telefone e e-mail. O e-mail é um contato da reserva, não uma forma de autenticação. Registros antigos e reservas manuais podem não ter e-mail.
+
+Veja [a revisão para apresentação](docs/REVISAO-ENTREGA.md) e [como usar fotos e calendários](docs/USO-RAPIDO.md).
 
 ## Fontes dos dados
 

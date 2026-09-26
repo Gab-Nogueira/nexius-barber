@@ -1,5 +1,7 @@
 'use client';
 import { SignOutButton } from './staff-login';
+import { CalendarActions } from './calendar-actions';
+import '@/app/booking-enhancements.css';
 
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -330,6 +332,7 @@ export function ClientBookings({
             <CalendarPlus /> Agendar novamente
           </a>
         </div>
+        {active && <CalendarActions bookingId={booking.id} />}
         {reschedulingId === booking.id && (
           <div className="reschedule-panel">
             <div className="reschedule-heading">

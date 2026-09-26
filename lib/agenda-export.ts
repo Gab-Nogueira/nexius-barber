@@ -2,6 +2,7 @@ export type ExportBooking = {
   reference: string;
   clientName: string;
   clientPhone: string;
+  clientEmail?: string | null;
   professionalId: string;
   professionalName: string;
   startAt: string;
@@ -71,6 +72,7 @@ export function agendaCsv(bookings: ExportBooking[], timezone: string) {
       'Fim',
       'Cliente',
       'Telefone',
+      'E-mail',
       'Profissional',
       'Serviços',
       'Situação',
@@ -86,6 +88,7 @@ export function agendaCsv(bookings: ExportBooking[], timezone: string) {
       agendaTime(b.endAt, timezone),
       b.clientName,
       b.clientPhone,
+      b.clientEmail || '',
       b.professionalName,
       b.services.map((s) => s.name).join(' + '),
       bookingStatusLabels[b.status] || b.status,

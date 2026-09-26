@@ -6,6 +6,7 @@ import {
   Camera,
   MapPin,
   Phone,
+  Scissors,
   UserRound,
 } from 'lucide-react';
 import { getCatalog } from '@/lib/booking-engine';
@@ -14,7 +15,7 @@ import { publicContent } from '@/lib/content';
 import { PhotoGallery } from '@/components/photo-gallery';
 import { BrandMotion } from '@/components/brand-motion';
 import { AvailabilityPulse, PortalControls } from '@/components/portal-controls';
-import { BeforeAfter, DemoTestimonials, ManagementShowcase } from '@/components/visual-showcase';
+import { BeforeAfter, DemoTestimonials } from '@/components/visual-showcase';
 import './gallery.css';
 
 export const dynamic = 'force-dynamic';
@@ -75,7 +76,6 @@ export default async function Home() {
           <a href="#sobre">Sobre</a>
           <a href="#servicos">Serviços</a>
           <a href="#equipe">Equipe</a>
-          <a href="#sistema">Sistema</a>
           <a href="#contato">Contato</a>
         </nav>
         <PortalControls whatsappNumber={values.whatsapp_number} />
@@ -186,16 +186,18 @@ export default async function Home() {
           </p>
         </header>
         <div className="public-service-list">
-          {observedServices.map((service, index) => (
+          {observedServices.map((service) => (
             <article key={service.id}>
-              <span>{String(index + 1).padStart(2, '0')}</span>
+              <div className="public-service-photo">
+                {service.photoId ? <img src={`/api/media/${service.photoId}`} alt={service.name} loading="lazy" /> : <Scissors aria-hidden="true" />}
+              </div>
               <div>
                 <h3>{service.name}</h3>
                 <p>{service.description}</p>
               </div>
               <strong>{formatMoney(service.priceCents)}</strong>
               <a href={`/agendar?servico=${service.id}`}>
-                Agendar este serviço <ArrowRight aria-hidden="true" />
+                Agendar <ArrowRight aria-hidden="true" />
               </a>
             </article>
           ))}
@@ -236,9 +238,8 @@ export default async function Home() {
                 <p>PROFISSIONAL</p>
                 <h3>{professional.name}</h3>
                 <span>{professional.serviceIds.map((id) => catalog.services.find((service) => service.id === id)?.name).filter(Boolean).slice(0, 2).join(' · ') || 'Conheça os serviços disponíveis no agendamento.'}</span>
-                <small className="team-profile-note">Bio e Instagram individual aguardam confirmação do profissional.</small>
                 <a className="team-social-link" href={values.instagram_url} target="_blank" rel="noopener noreferrer">Ver o Instagram da Nexius <ArrowUpRight aria-hidden="true" /></a>
-                <a href={`/agendar?profissional=${professional.id}`}>
+                <a className="team-book-link" href={`/agendar?profissional=${professional.id}`}>
                   Agendar com {professional.name} <ArrowUpRight />
                 </a>
               </div>
@@ -247,11 +248,10 @@ export default async function Home() {
         </div>
       </section>
       <DemoTestimonials />
-      <ManagementShowcase contactUrl={`https://wa.me/5512991387556?text=${encodeURIComponent('Olá, Gabriel! Quero conversar sobre a apresentação do sistema Nexius Barber.')}`} />
 
       <section className="contact-section" id="contato">
         <div className="contact-callout">
-          <p className="section-index">08 / CONTATO</p>
+          <p className="section-index">CONTATO</p>
           <h2>
             Seu próximo horário começa <em>aqui.</em>
           </h2>
@@ -313,11 +313,7 @@ export default async function Home() {
           <a href="/gestao">Gestão</a>
         </div>
         <p>Demonstração funcional — não substitui a agenda oficial.</p>
-        {values.developer_url && (
-          <a href={values.developer_url} target="_blank" rel="noreferrer">
-            Desenvolvido por Gabriel Nogueira
-          </a>
-        )}
+        <small className="footer-copyright">© {new Date().getFullYear()} Nexius Barber. Todos os direitos reservados. Site desenvolvido por <a href={values.developer_url || 'https://wa.me/5512991387556'} target="_blank" rel="noopener noreferrer">Gabriel Nogueira</a>.</small>
       </footer>
     </main>
   );

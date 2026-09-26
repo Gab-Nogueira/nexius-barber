@@ -11,20 +11,30 @@ Para mostrar ao cliente pela internet, abra `https://nexius-barber-demo.gabsilva
 
 ## Fotos
 
-Na gestão, entre em **Fotos e conteúdo**:
+Escolha o lugar da foto na gestão:
 
-1. Escolha uma imagem JPG, PNG ou WebP, até 5 MB, e escreva uma descrição acessível.
-2. Toque em **Armazenar imagem**.
-3. Selecione a imagem em Logo, Foto da abertura, Trabalhos ou Ambiente.
-4. Toque em **Salvar conteúdo**. Para foto de serviço ou barbeiro, escolha a imagem no Catálogo ou em Equipe e horários e salve o cadastro.
+1. **Catálogo → abrir serviço** para a foto do corte; **Equipe e horários → abrir profissional** para o retrato; **Fotos e conteúdo** para logo, abertura, trabalhos e ambiente.
+2. No campo correspondente, toque em **Escolher foto do aparelho** (ou **Trocar foto**).
+3. Aguarde a prévia e a mensagem “Foto pronta”. O site reduz a foto para até 1600 pixels, reencoda e remove metadados do original. Use JPG, PNG ou WebP de até 20 MB. HEIC depende do navegador; se não abrir, exporte como JPG.
+4. Toque no botão **Salvar** do cadastro. A biblioteca permite reutilizar fotos já enviadas.
 
 Enviar o arquivo não publica automaticamente. Use fotos originais autorizadas. O arquivo fica no R2 e a referência fica no D1. Na demonstração local ambos estão no computador; ao publicar, as fotos precisam ser enviadas ao ambiente hospedado.
 
 ## Reservas do cliente
 
-O cliente escolhe serviço, profissional e horário, informa nome e telefone, revisa e confirma. Não precisa de conta nem senha. A reserva é gravada antes de abrir WhatsApp.
+O cliente escolhe serviço, profissional e horário, informa nome, telefone e e-mail, revisa e confirma. Não precisa de conta nem senha. Ao começar pelo botão do Leonardo, ele já fica escolhido: serviço → horário → dados → confirmação. A reserva é gravada antes de abrir WhatsApp.
 
 “Meus agendamentos” funciona no mesmo navegador por até 30 dias. Se apagar cookies, trocar de aparelho ou encerrar o acesso, precisa falar com a barbearia usando a referência da reserva. Digitar um telefone não dá acesso ao histórico de ninguém.
+
+## Lembrete na agenda pessoal
+
+Na confirmação ou em **Meus agendamentos**, use **Google Agenda** ou **iPhone / arquivo de agenda**. Se abrir o WhatsApp automaticamente, volte ao site para salvar na agenda.
+
+- Google: a tela abre com serviço, profissional, local e horário. Escolha a notificação **1 hora antes** e toque em **Salvar**.
+- iPhone/Apple Calendar e outros calendários: abra o arquivo `.ics` na agenda. Ele contém um alerta de **1 hora antes**; confira se o aplicativo importou o alerta e permita notificações.
+- Se remarcar ou cancelar, ajuste ou exclua também o evento pessoal. O site não sincroniza alterações nem envia convites automáticos por e-mail. Evite adicionar o mesmo evento duas vezes.
+
+Informar e-mail não dá permissão para o site acessar uma conta Google/Apple. Convites automáticos dependem de configurar e validar um serviço de e-mail/calendário; essa integração não está ativa.
 
 ## WhatsApp
 

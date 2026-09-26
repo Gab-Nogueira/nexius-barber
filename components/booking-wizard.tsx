@@ -12,11 +12,13 @@ import {
   ShieldCheck,
   UserRound,
   MessageCircle,
+  Scissors,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import { CalendarActions } from './calendar-actions';
 
 type Service = {
   id: string;
@@ -29,10 +31,12 @@ type Service = {
   source: 'observed' | 'demo' | 'validated';
   requiresServiceId: string | null;
   comboServiceIdsJson: string;
+  photoId?: string | null;
 };
 type Professional = {
   id: string;
   name: string;
+  photoId?: string | null;
   serviceIds: string[];
   pricing: Array<{
     serviceId: string;
@@ -161,6 +165,7 @@ export function BookingWizard({
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [name, setName] = useState(accountName ?? '');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [booking, setBooking] = useState<Booking | null>(null);
   const [loading, setLoading] = useState(true);
   const [slotsLoading, setSlotsLoading] = useState(false);
@@ -448,6 +453,11 @@ export function BookingWizard({
 
   async function confirmBooking() {
     if (!selectedSlot) return;
+    if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email.trim()) || email.length > 254) {
+      setError('Confira seu e-mail antes de confirmar.');
+      document.getElementById('email')?.focus();
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
@@ -463,6 +473,7 @@ export function BookingWizard({
           startAt: selectedSlot.startAt,
           name,
           phone,
+          email: email.trim(),
           idempotencyKey,
           quoteRevision: selectedSlot.quoteRevision,
         }),
@@ -561,7 +572,7 @@ export function BookingWizard({
   ].filter((group) => group.slots.length);
 
   return (
-    <div className="booking-layout">
+    <div className={`booking-layout ${step === 5 ? 'booking-complete' : ''}`}>
       <section className="booking-main" aria-labelledby="booking-title">
         <div className="booking-progress-copy">
           <span>Etapa {displayedStep} de {displayedStepTotal}</span>
@@ -686,6 +697,7 @@ export function BookingWizard({
                       <span className="service-check" aria-hidden="true">
                         {selected ? <Check size={16} /> : '+'}
                       </span>
+                      <span className="booking-service-photo" aria-hidden="true">{service.photoId ? <img src={`/api/media/${service.photoId}`} alt="" loading="lazy" /> : <Scissors />}</span>
                       <span className="service-copy">
                         <strong>{service.name}</strong>
                         <small>{service.description}</small>
@@ -760,12 +772,12 @@ export function BookingWizard({
                   aria-pressed={professionalChoice === professional.id}
                 >
                   <div className="professional-avatar">
-                    <UserRound aria-hidden="true" />
+                    {professional.photoId ? <img src={`/api/media/${professional.photoId}`} alt="" loading="lazy" /> : <UserRound aria-hidden="true" />}
                   </div>
                   <div>
                     <strong>{professional.name}</strong>
                     <span>
-                      Nome observado na agenda atual. Perfil em validação.
+                      Ver horários disponíveis
                     </span>
                   </div>
                   {professionalChoice === professional.id && (
@@ -940,6 +952,11 @@ export function BookingWizard({
                     placeholder="(12) 98888-8888"
                   />
                 </div>
+                <div className="identity-email">
+                  <Label htmlFor="email">E-mail de contato</Label>
+                  <Input id="email" type="email" autoComplete="email" inputMode="email" autoCapitalize="none" spellCheck={false} maxLength={254} required value={email} onChange={event => setEmail(event.target.value)} placeholder="voce@email.com" aria-describedby="email-help" />
+                  <small id="email-help">Depois de confirmar, você pode salvar o horário no Google Agenda ou na agenda do iPhone.</small>
+                </div>
                 <p>
                   <ShieldCheck aria-hidden="true" size={18} /> Seus dados são
                   usados para o agendamento. Sem senha ou criação de conta.
@@ -977,13 +994,8 @@ export function BookingWizard({
               <a className="button button-primary" href="/cliente">
                 Meus agendamentos
               </a>
-              <a
-                className="button button-ghost"
-                href={`/api/bookings/${booking.id}/calendar`}
-              >
-                Adicionar ao calendário
-              </a>
             </div>
+            {['pending', 'confirmed'].includes(booking.status) && <CalendarActions bookingId={booking.id} />}
             <p className="wizard-lead">Para cancelar ou remarcar, use “Meus agendamentos” neste aparelho, dentro do prazo, ou fale com a barbearia. Guarde sua referência. Nome e telefone não dão acesso ao histórico em outro aparelho.</p>
             {!whatsappUrl && <p className="muted">O WhatsApp da barbearia ainda precisa ser confirmado na gestão.</p>}
           </div>
@@ -1092,6 +1104,7 @@ export function BookingWizard({
               submitting ||
               !name.trim() ||
               phone.replace(/\D/g, '').length < 10 ||
+              !email.trim() ||
               !selectedSlot
             }
             onClick={confirmBooking}
@@ -1102,7 +1115,7 @@ export function BookingWizard({
         )}
         {step === 5 && (
           <p className="summary-confirmed">
-            <Check aria-hidden="true" /> Persistido no banco da demonstração
+            <Check aria-hidden="true" /> Reserva salva na demonstração
           </p>
         )}
       </aside>

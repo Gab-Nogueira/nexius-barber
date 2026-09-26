@@ -57,17 +57,22 @@ try {
   await command('Runtime.enable');
   await size(390);
   await command('Page.navigate', { url: origin + '/' });
-  await wait('document.readyState === "complete" && !!document.querySelector(".system-showcase")');
+  await wait('document.readyState === "complete" && !!document.querySelector(".contact-section")');
+  assert.equal(await evaluate('!!document.querySelector(".system-showcase")'), false);
   await wait('document.querySelector(".availability-pulse") && !document.querySelector(".availability-pulse").textContent.includes("Consultando")');
   await new Promise((resolve) => setTimeout(resolve, 1800)); // first-visit intro
   const widths = [];
-  for (const width of [360, 390, 768, 1024, 1440]) {
+  for (const width of [360, 390, 768, 1024, 1440, 1920, 2560]) {
     await size(width);
     await evaluate('scrollTo(0,0)');
     const layout = await evaluate('({width:innerWidth,scroll:document.documentElement.scrollWidth,cta:!!document.querySelector(".hero-actions .button-primary"),demo:document.querySelector(".demo-bar")?.innerText})');
     assert.ok(layout.scroll <= width + 1, JSON.stringify(layout));
     assert.ok(layout.cta && /demonstração/i.test(layout.demo), JSON.stringify(layout));
     widths.push(layout);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const textBounds = await evaluate(`Array.from(document.querySelectorAll('.hero h1,.team-editorial h3,.team-book-link')).map(el=>{const range=document.createRange();range.selectNodeContents(el);const r=range.getBoundingClientRect(),p=el.closest('.hero-copy,.team-editorial article').getBoundingClientRect();return {text:el.textContent.trim(),left:r.left,right:r.right,parentLeft:p.left,parentRight:p.right};})`);
+    for(const text of textBounds) assert.ok(text.left >= text.parentLeft - 2 && text.right <= text.parentRight + 2, JSON.stringify({width,text}));
+    assert.ok(textBounds.some(text=>/Leonardo/.test(text.text)));
   }
   await size(390);
   const image = await evaluate('({demo:document.querySelector(".public-photo-gallery img")?.naturalWidth,comparison:getComputedStyle(document.querySelector(".comparison-before")).backgroundImage})');
@@ -104,18 +109,21 @@ try {
   await evaluate('document.querySelector(".before-after-frame").scrollIntoView({behavior:"instant",block:"center"})');
   await new Promise((resolve) => setTimeout(resolve, 350));
   const compareShot = await screenshot('compare-390.png');
-  await evaluate('document.querySelector(".management-mock-window").scrollIntoView({behavior:"instant",block:"center"})');
+  await evaluate('document.querySelector(".team-editorial").scrollIntoView({behavior:"instant",block:"center"})');
   await new Promise((resolve) => setTimeout(resolve, 350));
-  const systemShot = await screenshot('system-390.png');
+  const systemShot = await screenshot('team-390.png');
   await size(1440);
   await evaluate('scrollTo(0,0)');
   await new Promise((resolve) => setTimeout(resolve, 350));
   const desktopShot = await screenshot('home-1440.png');
+  await evaluate('document.querySelector(".team-editorial").scrollIntoView({behavior:"instant",block:"center"})');
+  await new Promise(resolve => setTimeout(resolve, 350));
+  const teamDesktopShot = await screenshot('team-1440.png');
   await command('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
   const reduced = await evaluate('matchMedia("(prefers-reduced-motion: reduce)").matches && getComputedStyle(document.querySelector(".hero h1")).animationName === "none"');
   assert.equal(reduced, true);
   assert.deepEqual(exceptions, []);
-  console.log(JSON.stringify({ ok: true, widths, theme, manifest, worker, reduced, screenshots: [mobileShot, compareShot, systemShot, desktopShot] }));
+  console.log(JSON.stringify({ ok: true, widths, theme, manifest, worker, reduced, screenshots: [mobileShot, compareShot, systemShot, desktopShot, teamDesktopShot] }));
 } finally {
   socket.close();
   await fetch(`${endpoint}/json/close/${target.id}`).catch(() => undefined);
